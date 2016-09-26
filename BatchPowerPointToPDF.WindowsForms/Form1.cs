@@ -32,9 +32,9 @@ namespace BatchPowerPointToPDF.WindowsForms
             {
                 officeInstalledLabel.Text += "FALSE";
 
+                // Office has not been detected on the computer. Therefore the application must exit.
                 MessageBox.Show("Office Is Not Installed");
                 Application.Exit();
-
             }
         }
 
@@ -45,17 +45,19 @@ namespace BatchPowerPointToPDF.WindowsForms
 
         private void openPPTXBtn_Click(object sender, EventArgs e)
         {
+            // Initializing Dialog Box
             OpenFileDialog openPPTXDialog = new OpenFileDialog();
-
             openPPTXDialog.InitialDirectory = "%documents%";
             openPPTXDialog.Filter = "PowerPoint Presentations (*.PPTX)|*.PPTX";
             openPPTXDialog.Multiselect = true;
             openPPTXDialog.Title = "Select PowerPoint presentation(s)";
 
+            // Opening Dialog Box
             DialogResult dr = openPPTXDialog.ShowDialog();
 
             if (dr == DialogResult.OK)
             {
+                // Adding user-selected filenames
                 foreach (String file in openPPTXDialog.FileNames)
                 {
                     PPTXFileNames.AddFirst(file.ToString());
@@ -65,11 +67,16 @@ namespace BatchPowerPointToPDF.WindowsForms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // TODO: Investigate non-blocking UI approach.
             foreach(String x in PPTXFileNames)
             {
-                PPTXExporterLibrary.PPTXExporter.ConvertToPDF(x);
+                // So we do not block the UI thread.
+                Task convert = Task.Factory.StartNew(() => PPTXExporterLibrary.PPTXExporter.ConvertToPDF(x));
+                if (convert.IsCompleted)
+                {
+                    convert.Dispose();
+                }
             }
+
         }
     }
 }
