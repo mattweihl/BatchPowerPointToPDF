@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPTXExporterLibrary", "Powe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatchPowerPointToPDF.WindowsForms", "BatchPowerPointToPDF.WindowsForms\BatchPowerPointToPDF.WindowsForms.csproj", "{A0FFB079-0ABA-472F-AA5B-DE57C3D0FBD8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatchPowerPointToPDF.WPF", "BatchPowerPointToPDF.WPF\BatchPowerPointToPDF.WPF.csproj", "{C190CE39-F275-4F43-A8F7-7000E8CE4F6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A0FFB079-0ABA-472F-AA5B-DE57C3D0FBD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0FFB079-0ABA-472F-AA5B-DE57C3D0FBD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0FFB079-0ABA-472F-AA5B-DE57C3D0FBD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C190CE39-F275-4F43-A8F7-7000E8CE4F6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C190CE39-F275-4F43-A8F7-7000E8CE4F6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C190CE39-F275-4F43-A8F7-7000E8CE4F6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C190CE39-F275-4F43-A8F7-7000E8CE4F6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

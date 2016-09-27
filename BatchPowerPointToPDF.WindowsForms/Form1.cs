@@ -12,7 +12,8 @@ namespace BatchPowerPointToPDF.WindowsForms
 {
     public partial class Form1 : Form
     {
-        LinkedList<String> PPTXFileNames = new LinkedList<string>();
+        LinkedList<String> pptxFileNames = new LinkedList<String>();
+
         public Form1()
         {
             InitializeComponent();
@@ -45,6 +46,12 @@ namespace BatchPowerPointToPDF.WindowsForms
 
         private void openPPTXBtn_Click(object sender, EventArgs e)
         {
+             pptxFileNames = OpenPDF();
+        }
+
+        private LinkedList<String> OpenPDF()
+        {
+            LinkedList<String> PPTXFileNames = new LinkedList<string>();
             // Initializing Dialog Box
             OpenFileDialog openPPTXDialog = new OpenFileDialog();
             openPPTXDialog.InitialDirectory = "%documents%";
@@ -63,11 +70,13 @@ namespace BatchPowerPointToPDF.WindowsForms
                     PPTXFileNames.AddFirst(file.ToString());
                 }
             }
+
+            return PPTXFileNames;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            foreach(String x in PPTXFileNames)
+            foreach(String x in pptxFileNames)
             {
                 // So we do not block the UI thread.
                 Task convert = Task.Factory.StartNew(() => PPTXExporterLibrary.PPTXExporter.ConvertToPDF(x));
