@@ -1,5 +1,4 @@
-﻿using PPTXExporterLibrary;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +21,7 @@ namespace BatchPowerPointToPDF.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        LinkedList<String> pptxFilenames = new LinkedList<String>();
+        LinkedList<String> pptxFilenames;
         public MainWindow()
         {
             InitializeComponent();
@@ -30,19 +29,26 @@ namespace BatchPowerPointToPDF.WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            bool officeInstalled = PPTXExporter.OfficeInstalled();
+            bool officeInstalled = PPTXExporterLibrary.PPTXExporter.OfficeInstalled();
 
             officeInstalledLabel.Content += officeInstalled.ToString().ToUpper();
+
+            if (!officeInstalled)
+            {
+                MessageBox.Show("Office is not installed. In order to continue, please install Office.");
+                Application.Current.Shutdown();
+            }
         }
 
         private void openPPTXBtn_Click(object sender, RoutedEventArgs e)
         {
-            pptxFilenames = OpenPDF();
+            OpenPDF();
         }
 
-        private LinkedList<String> OpenPDF()
+        private void OpenPDF()
         {
-            LinkedList<String> pptxFilenames = new LinkedList<string>();
+            pptxFilenames = new LinkedList<String>();
+
             // Initializing Dialog Box
             OpenFileDialog openPPTXDialog = new OpenFileDialog();
             openPPTXDialog.InitialDirectory = "%documents%";
@@ -60,21 +66,17 @@ namespace BatchPowerPointToPDF.WPF
                     pptxFilenames.AddFirst(file.ToString());
                 }
             }
-
-
-            return pptxFilenames;
         }
 
         private void button_Copy_Click(object sender, RoutedEventArgs e)
         {
+            // TODO: Fix blocking of UI thread, implement ConvertToPDF as async function.
+            // When implemented as a Task, sometimes the Task is not properly disposed, and therefore
+            // PowerPoint is stuck and does not convert the file. 
+
             foreach (String file in pptxFilenames)
             {
-                // So we do not block the UI thread.
-                Task convert = Task.Factory.StartNew(() => PPTXExporterLibrary.PPTXExporter.ConvertToPDF(file));
-                if (convert.IsCompleted)
-                {
-                    convert.Dispose();
-                }
+                PPTXExporterLibrary.PPTXExporter.ConvertToPDF(file);
             }
         }
     }
