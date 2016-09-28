@@ -1,18 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Microsoft.Win32;
+using PowerPointToPDFLibrary;
 
 namespace BatchPowerPointToPDF.WPF
 {
@@ -21,7 +11,7 @@ namespace BatchPowerPointToPDF.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        LinkedList<String> pptxFilenames;
+        LinkedList<String> _pptxFilenames;
         public MainWindow()
         {
             InitializeComponent();
@@ -29,7 +19,8 @@ namespace BatchPowerPointToPDF.WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            bool officeInstalled = PPTXExporterLibrary.PPTXExporter.OfficeInstalled();
+            // Implement more robust checking of Office Installation.
+            bool officeInstalled = PptxExporter.OfficeInstalled();
 
             officeInstalledLabel.Content += officeInstalled.ToString().ToUpper();
 
@@ -42,28 +33,30 @@ namespace BatchPowerPointToPDF.WPF
 
         private void openPPTXBtn_Click(object sender, RoutedEventArgs e)
         {
-            OpenPDF();
+            OpenPdf();
         }
 
-        private void OpenPDF()
+        /// <summary>
+        /// Opens Windows dialog box and allows user to pick PowerPoint presentations (PPTX) that are to converted to PDFs.
+        /// </summary>
+        private void OpenPdf()
         {
-            pptxFilenames = new LinkedList<String>();
+            _pptxFilenames = new LinkedList<String>();
 
             // Initializing Dialog Box
-            OpenFileDialog openPPTXDialog = new OpenFileDialog();
-            openPPTXDialog.InitialDirectory = "%documents%";
-            openPPTXDialog.Filter = "PowerPoint Presentations (*.PPTX)|*.PPTX";
-            openPPTXDialog.Multiselect = true;
-            openPPTXDialog.Title = "Select PowerPoint presentation(s)";
-
-            // Opening Dialog Box
-            bool? dialogResult = openPPTXDialog.ShowDialog();
-
-            if (dialogResult ?? false)
+            OpenFileDialog openPptxDialog = new OpenFileDialog
             {
-                foreach (String file in openPPTXDialog.FileNames)
+                InitialDirectory = "%documents%",
+                Filter = "PowerPoint Presentations (*.PPTX)|*.PPTX",
+                Multiselect = true,
+                Title = "Select PowerPoint presentation(s)"
+            };
+
+            if (openPptxDialog.ShowDialog() ?? false)
+            {
+                foreach (String file in openPptxDialog.FileNames)
                 {
-                    pptxFilenames.AddFirst(file.ToString());
+                    _pptxFilenames.AddFirst(file.ToString());
                 }
             }
         }
@@ -74,9 +67,9 @@ namespace BatchPowerPointToPDF.WPF
             // When implemented as a Task, sometimes the Task is not properly disposed, and therefore
             // PowerPoint is stuck and does not convert the file. 
 
-            foreach (String file in pptxFilenames)
+            foreach (String file in _pptxFilenames)
             {
-                PPTXExporterLibrary.PPTXExporter.ConvertToPDF(file);
+                PptxExporter.ConvertToPdf(file);
             }
         }
     }
