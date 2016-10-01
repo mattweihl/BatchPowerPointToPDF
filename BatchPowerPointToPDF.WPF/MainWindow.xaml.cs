@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using Microsoft.Win32;
 using PowerPointToPDFLibrary;
+using System.Collections.ObjectModel;
 
 namespace BatchPowerPointToPDF.WPF
 {
@@ -11,18 +12,21 @@ namespace BatchPowerPointToPDF.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        LinkedList<String> _pptxFilenames;
+        PptxExporter exporter;
+        public ObservableCollection<String> _pptxFilenames;
+
         public MainWindow()
         {
             InitializeComponent();
+            exporter = new PptxExporter();
+            _pptxFilenames = new ObservableCollection<string>();
+            filenamesListView.ItemsSource = _pptxFilenames;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             // Implement more robust checking of Office Installation.
-            bool officeInstalled = PptxExporter.OfficeInstalled();
-
-            officeInstalledLabel.Content += officeInstalled.ToString().ToUpper();
+            bool officeInstalled = exporter.OfficeInstalled();
 
             if (!officeInstalled)
             {
@@ -41,8 +45,7 @@ namespace BatchPowerPointToPDF.WPF
         /// </summary>
         private void OpenPdf()
         {
-            _pptxFilenames = new LinkedList<String>();
-
+            
             // Initializing Dialog Box
             OpenFileDialog openPptxDialog = new OpenFileDialog
             {
@@ -56,7 +59,11 @@ namespace BatchPowerPointToPDF.WPF
             {
                 foreach (String file in openPptxDialog.FileNames)
                 {
-                    _pptxFilenames.AddFirst(file.ToString());
+                    // Making sure we don't add duplicate entries.
+                    if (!_pptxFilenames.Contains(file))
+                    {
+                        _pptxFilenames.Add(file.ToString());
+                    }
                 }
             }
         }
@@ -69,8 +76,41 @@ namespace BatchPowerPointToPDF.WPF
 
             foreach (String file in _pptxFilenames)
             {
-                PptxExporter.ConvertToPdf(file);
+                exporter.ConvertToPdf(file);
             }
+        }
+
+        private void removePPTXBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (filenamesListView.HasItems)
+            {
+                var list = filenamesListView.SelectedItems;
+                LinkedList<String> removedItems = new LinkedList<string>();
+
+                // Can't actually remove files here, since .NET/ C# will complain about us modifying the list while iterating through it.
+                foreach (String file in list)
+                {
+                    removedItems.AddFirst(file);
+                }
+
+                foreach (String file in removedItems)
+                {
+                    _pptxFilenames.Remove(file);
+                }
+            }
+
+        }
+
+        private void openInPPT_Click(object sender, RoutedEventArgs e)
+        {
+            if (filenamesListView.SelectedItems != null)
+            {
+                foreach (String file in filenamesListView.SelectedItems)
+                {
+                    exporter.OpenInPowerPoint(file);
+                }    
+            }
+                
         }
     }
 }
