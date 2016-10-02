@@ -8,12 +8,12 @@ namespace PowerPointToPDFLibrary
 {
     public class PptxExporter
     {
-        PowerPoint.Application app;
-        PowerPoint.Presentations presentation;
+        private PowerPoint.Application _app;
+        private PowerPoint.Presentations _presentation;
         public PptxExporter()
         {
-            app = new PowerPoint.Application();
-            presentation = app.Presentations;
+            _app = new PowerPoint.Application();
+            _presentation = _app.Presentations;
         }
 
         /// <summary>
@@ -24,19 +24,15 @@ namespace PowerPointToPDFLibrary
         {
             try
             {
-                if (!OfficeInstalled())
-                {
-                    throw new NotSupportedException("Office Installation Not Detected");
-                }
-
                 // Adding Escape Characters
                 pptxFilename = pptxFilename.Replace(@"\\", @"\");
 
                 // Opening PowerPoint
-                PowerPoint.Presentation file = app.Presentations.Open(pptxFilename, MsoTriState.msoTrue, MsoTriState.msoTrue, MsoTriState.msoFalse);
+                var file = _app.Presentations.Open(pptxFilename, MsoTriState.msoTrue, MsoTriState.msoTrue, MsoTriState.msoFalse);
 
                 // Converting to PDF
                 file.ExportAsFixedFormat(pptxFilename + ".pdf", PowerPoint.PpFixedFormatType.ppFixedFormatTypePDF);
+                WriteToLogFile("Converted to PDF: " + pptxFilename);
             }
 
             catch (Exception e)
@@ -51,34 +47,39 @@ namespace PowerPointToPDFLibrary
         /// <returns></returns>
         public bool OfficeInstalled()
         {
-            RegistryKey powerpointKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\powerpnt.exe");
+            var powerpointKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\powerpnt.exe");
 
-            powerpointKey?.Close();
-
-            return powerpointKey != null;
+            if (powerpointKey != null)
+            {
+                WriteToLogFile("Office installation detected.");
+                return true;
+            }
+                WriteToLogFile("Office installation not detected.");
+                return false;
         }
 
-        public void OpenInPowerPoint(String filename)
+        public void OpenInPowerPoint(string filename)
         {
-            PowerPoint.Presentation file = app.Presentations.Open(filename, MsoTriState.msoFalse, MsoTriState.msoFalse, MsoTriState.msoTrue);
+            var file = _app.Presentations.Open(filename, MsoTriState.msoFalse, MsoTriState.msoFalse, MsoTriState.msoTrue);
+            WriteToLogFile("Opened in PowerPoint: " + filename);
         }
 
         /// <summary>
-        /// Writes specified String to log.txt in the program's current directory.
+        /// Writes specified message to log.txt in the program's current directory.
         /// </summary>
-        /// <param name="line"></param>
-        private void WriteToLogFile(String line)
+        /// <param name="message"></param>
+        private void WriteToLogFile(string message)
         {
-            String logPath = Directory.GetCurrentDirectory() + "\\log.txt";
+            var logPath = Directory.GetCurrentDirectory() + "\\log.txt";
 
             if (!File.Exists(logPath))
             {
-                FileStream logFile = File.Create(logPath);
+                var logFile = File.Create(logPath);
                 logFile.Close();
             }
 
             TextWriter logWriter = new StreamWriter(logPath, true);
-            logWriter.WriteLine(line);
+            logWriter.WriteLine(DateTimeOffset.Now.ToString() + ": " + message);
             logWriter.Close();
         }
     }

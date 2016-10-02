@@ -4,6 +4,7 @@ using System.Windows;
 using Microsoft.Win32;
 using PowerPointToPDFLibrary;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
 
 namespace BatchPowerPointToPDF.WPF
 {
@@ -12,25 +13,20 @@ namespace BatchPowerPointToPDF.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        PptxExporter exporter;
-        public ObservableCollection<String> _pptxFilenames;
+        public PptxExporter Exporter = new PptxExporter();
+        public ObservableCollection<ListViewItem> PptxFilenames = new ObservableCollection<ListViewItem>();
 
         public MainWindow()
         {
             InitializeComponent();
-            exporter = new PptxExporter();
-            _pptxFilenames = new ObservableCollection<string>();
-            filenamesListView.ItemsSource = _pptxFilenames;
+            filenamesListView.ItemsSource = PptxFilenames;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            // Implement more robust checking of Office Installation.
-            bool officeInstalled = exporter.OfficeInstalled();
-
-            if (!officeInstalled)
+            if (!Exporter.OfficeInstalled())
             {
-                MessageBox.Show("Office is not installed. In order to continue, please install Office.");
+                MessageBox.Show("PowerPoint is required to use this tool. Please install PowerPoint.");
                 Application.Current.Shutdown();
             }
         }
@@ -45,9 +41,8 @@ namespace BatchPowerPointToPDF.WPF
         /// </summary>
         private void OpenPdf()
         {
-            
             // Initializing Dialog Box
-            OpenFileDialog openPptxDialog = new OpenFileDialog
+            var openPptxDialog = new OpenFileDialog
             {
                 InitialDirectory = "%documents%",
                 Filter = "PowerPoint Presentations (*.PPTX)|*.PPTX",
@@ -57,12 +52,26 @@ namespace BatchPowerPointToPDF.WPF
 
             if (openPptxDialog.ShowDialog() ?? false)
             {
-                foreach (String file in openPptxDialog.FileNames)
+                foreach (var file in openPptxDialog.FileNames)
                 {
                     // Making sure we don't add duplicate entries.
-                    if (!_pptxFilenames.Contains(file))
+
+                    // TODO: Probably not efficient, research other ways to check for duplicate items.
+                    // In Windows Forms, there is an option to perform "ContainsKey" but it is not available in WPF.
+
+                    var item = new ListViewItem {Content = file};
+                    var contains = false;
+                    foreach (var compareItem in PptxFilenames)
                     {
-                        _pptxFilenames.Add(file.ToString());
+                        if (compareItem.Content.ToString() == file)
+                        {
+                            contains = true;
+                        }
+                    }
+
+                    if (!contains)
+                    {
+                        PptxFilenames.Add(item);
                     }
                 }
             }
@@ -74,9 +83,9 @@ namespace BatchPowerPointToPDF.WPF
             // When implemented as a Task, sometimes the Task is not properly disposed, and therefore
             // PowerPoint is stuck and does not convert the file. 
 
-            foreach (String file in _pptxFilenames)
+            foreach (var item in PptxFilenames)
             {
-                exporter.ConvertToPdf(file);
+                Exporter.ConvertToPdf(item.Content.ToString());
             }
         }
 
@@ -85,29 +94,28 @@ namespace BatchPowerPointToPDF.WPF
             if (filenamesListView.HasItems)
             {
                 var list = filenamesListView.SelectedItems;
-                LinkedList<String> removedItems = new LinkedList<string>();
+                var removedItems = new LinkedList<ListViewItem>();
 
                 // Can't actually remove files here, since .NET/ C# will complain about us modifying the list while iterating through it.
-                foreach (String file in list)
+                foreach (var item in list)
                 {
-                    removedItems.AddFirst(file);
+                    removedItems.AddFirst(item as ListViewItem);
                 }
 
-                foreach (String file in removedItems)
+                foreach (var item in removedItems)
                 {
-                    _pptxFilenames.Remove(file);
+                    PptxFilenames.Remove(item);
                 }
             }
-
         }
 
         private void openInPPT_Click(object sender, RoutedEventArgs e)
         {
             if (filenamesListView.SelectedItems != null)
             {
-                foreach (String file in filenamesListView.SelectedItems)
+                foreach (ListViewItem file in filenamesListView.SelectedItems)
                 {
-                    exporter.OpenInPowerPoint(file);
+                    Exporter.OpenInPowerPoint(file.Content.ToString());
                 }    
             }
                 

@@ -5,20 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BatchPowerPointToPDF.WPF"
         mc:Ignorable="d"
-        Title="Batch PowerPoint To PDF Tool" Height="500" Width="700" MinHeight="500" MinWidth="700" ResizeMode="CanResizeWithGrip" Loaded="Window_Loaded">
+        Title="Batch PowerPoint To PDF Tool" Height="500" Width="480" MinHeight="500" MinWidth="480" ResizeMode="CanResizeWithGrip" Loaded="Window_Loaded">
     <Grid>
-        <Button x:Name="openPPTXBtn" Content="Add PowerPoint File(s)" Margin="10,0,0,9.667" Click="openPPTXBtn_Click" Height="35" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="142"/>
-        <Button x:Name="button_Copy" Content="Export to PDF" Margin="0,0,9.333,9.667" Click="button_Copy_Click" Height="35" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="87"/>
-        <Button x:Name="openInPPT" Content="Open in PowerPoint" Margin="0,0,101.333,9.667" Height="35" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="120" Click="openInPPT_Click"/>
-        <ListView x:Name="filenamesListView" Margin="10,41,9.333,63.667" SelectionMode="Multiple">
+        <Button x:Name="openPPTXBtn" Content="Add" Margin="10,0,0,9.667" Click="openPPTXBtn_Click" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="75"/>
+        <Button x:Name="button_Copy" Content="Export to PDF" Margin="0,0,13.333,9.667" Click="button_Copy_Click" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="85"/>
+        <Button x:Name="openInPPT" Content="Open in PowerPoint" Margin="0,0,103.333,9.667" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="120" Click="openInPPT_Click"/>
+        <ListView x:Name="filenamesListView" Margin="10,10,9.333,37.667" FontFamily="Segoe UI">
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>
                 </GridView>
             </ListView.View>
         </ListView>
-        <Label x:Name="label" Content="PowerPoint(s) To Be Converted: " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.693,-0.075"/>
-        <Button x:Name="removePPTXBtn" Content="Remove PowerPoint File(s)" Margin="157,0,0,9.667" Height="35" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="161" Click="removePPTXBtn_Click"/>
+        <Button x:Name="removePPTXBtn" Content="Remove" Margin="90,0,0,9.667" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="75" Click="removePPTXBtn_Click"/>
 
     </Grid>
 </Window>
