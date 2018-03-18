@@ -1,16 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPTXExporterLibrary", "PowerPointToPDFLibrary\PPTXExporterLibrary.csproj", "{9B2EA607-9AF5-4511-8A1C-19B5EC4E9C47}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatchPowerPointToPDF.WPF", "BatchPowerPointToPDF.WPF\BatchPowerPointToPDF.WPF.csproj", "{C190CE39-F275-4F43-A8F7-7000E8CE4F6C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeInterop", "PowerPointToPDFLibrary\OfficeInterop.csproj", "{9B2EA607-9AF5-4511-8A1C-19B5EC4E9C47}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{94164DA2-50BD-40C1-B821-5B332F089AE9}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatchPowerPointToPDF.ConsoleApp", "BatchPowerPointToPDF.ConsoleApp\BatchPowerPointToPDF.ConsoleApp.csproj", "{65FA79B9-547C-4B02-A84F-67FE6D9C1B4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,12 +22,15 @@ Global
 		{9B2EA607-9AF5-4511-8A1C-19B5EC4E9C47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B2EA607-9AF5-4511-8A1C-19B5EC4E9C47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B2EA607-9AF5-4511-8A1C-19B5EC4E9C47}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C190CE39-F275-4F43-A8F7-7000E8CE4F6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C190CE39-F275-4F43-A8F7-7000E8CE4F6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C190CE39-F275-4F43-A8F7-7000E8CE4F6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C190CE39-F275-4F43-A8F7-7000E8CE4F6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65FA79B9-547C-4B02-A84F-67FE6D9C1B4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65FA79B9-547C-4B02-A84F-67FE6D9C1B4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65FA79B9-547C-4B02-A84F-67FE6D9C1B4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65FA79B9-547C-4B02-A84F-67FE6D9C1B4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1D6C4935-668B-4650-BD2E-E88A1B4A52EF}
 	EndGlobalSection
 EndGlobal
